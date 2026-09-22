@@ -1,0 +1,40 @@
+spring:
+  application:
+    name: notification-service
+  datasource:
+    url: ${SPRING_DATASOURCE_URL:jdbc:mysql://localhost:3306/notifications}
+    username: ${SPRING_DATASOURCE_USERNAME:notif}
+    password: ${SPRING_DATASOURCE_PASSWORD:notif}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+
+server:
+  port: 8080
+  shutdown: graceful
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+
+# Everything below is deliberately overridable via env vars so behaviour can
+# be tuned without a rebuild.
+delivery:
+  max-attempts: 4
+  backoff-base-seconds: 5
+  poll-interval-ms: 1000
+  batch-size: 10
+  simulated-failure-rate: 0.3
+
+logging:
+  level:
+    com.assignment.notifications: INFO
